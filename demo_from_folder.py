@@ -1,7 +1,7 @@
 """
 Demo of HMR.
 
-Note that HMR requires the bounding box of the person in the image. The best performance is obtained when max length of the person in the image is roughly 150px. 
+Note that HMR requires the bounding box of the person in the image. The best performance is obtained when max length of the person in the image is roughly 150px.
 
 When only the image path is supplied, it assumes that the image is centered on a person whose length is roughly 150px.
 Alternatively, you can supply output of the openpose to figure out the bbox and the right scale factor.
@@ -20,6 +20,8 @@ from __future__ import division
 from __future__ import print_function
 
 import sys
+from os import listdir
+from os.path import join
 from absl import flags
 import numpy as np
 
@@ -84,7 +86,7 @@ def visualize(img, proc_param, joints, verts, cam, image_path):
     plt.imshow(rend_img_vp2)
     plt.title('diff vp')
     plt.axis('off')
-    # plt.draw()
+    plt.draw()
     # plt.show()
     plt.savefig(image_path + "hmr_result.png", format='png')
     # import ipdb
@@ -117,18 +119,23 @@ def preprocess_image(img_path, json_path=None):
     return crop, proc_param, img
 
 
-def main(img_path, json_path=None):
+def main(folder_path, json_path=None):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
 
-    input_img, proc_param, img = preprocess_image(img_path, json_path)
-    # Add batch dimension: 1 x D x D x 3
-    input_img = np.expand_dims(input_img, 0)
+    images = [f for f in listdir(folder_path) if f.endswith('.png') or f.endswith('.jpg')]
+    print('Predictin on all png or jpg images in folder.')
+    for image in images:
+        print('Image:', image)
+        img_path = join(folder_path, image)
+        input_img, proc_param, img = preprocess_image(img_path, json_path)
+        # Add batch dimension: 1 x D x D x 3
+        input_img = np.expand_dims(input_img, 0)
 
-    joints, verts, cams, joints3d, theta = model.predict(
-        input_img, get_theta=True)
+        joints, verts, cams, joints3d, theta = model.predict(
+            input_img, get_theta=True)
 
-    visualize(img, proc_param, joints[0], verts[0], cams[0], img_path)
+        visualize(img, proc_param, joints[0], verts[0], cams[0], img_path)
 
 
 if __name__ == '__main__':
