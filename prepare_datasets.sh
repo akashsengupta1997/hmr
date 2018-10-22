@@ -2,7 +2,7 @@
 # ----- SET YOUR PATH!! -----
 # ---------------------------
 # This is where you want all of your tf_records to be saved:
-DATA_DIR=/scratch1/storage/hmr_release_files/test_tf_datasets
+DATA_DIR=~/Documents/Github/hmr/tf_datasets
 
 # This is the directory that contains README.txt
 LSP_DIR=/scratch1/storage/human_datasets/lsp_dataset
