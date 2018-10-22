@@ -1,5 +1,5 @@
 # TODO: Replace with where you downloaded your resnet_v2_50.
-PRETRAINED=/scratch1/projects/tf_datasets/models/resnet_v2_50/resnet_v2_50.ckpt
+PRETRAINED=~/Documents/Github/hmr/models/resnet_v2_50/resnet_v2_50.ckpt
 # TODO: Replace with where you generated tf_record!
 DATA_DIR=/scratch1/storage/hmr_release_files/test_tf_datasets/
 
