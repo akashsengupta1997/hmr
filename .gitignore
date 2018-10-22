@@ -5,3 +5,8 @@ logs*/
 *.pyc
 forrelease.sh
 *.png
+*.mp4
+*.iml
+*.xml
+*.jpg
+test_images/work_lock
