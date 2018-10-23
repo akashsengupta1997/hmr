@@ -9,4 +9,4 @@ forrelease.sh
 *.iml
 *.xml
 *.jpg
-test_images/work_lock
+*work_lock
