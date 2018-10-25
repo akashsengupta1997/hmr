@@ -35,6 +35,7 @@ flags.DEFINE_string('smpl_model_path', SMPL_MODEL_PATH,
 flags.DEFINE_string('smpl_face_path', SMPL_FACE_PATH,
                     'path to smpl mesh faces (for easy rendering)')
 flags.DEFINE_string('load_path', None, 'path to trained model')
+flags.DEFINE_string('save_path', None, 'path to save results to')
 flags.DEFINE_string('pretrained_model_path', None,
                     'if not None, fine-tunes from this ckpt')
 flags.DEFINE_integer('batch_size', 8,
@@ -53,7 +54,7 @@ flags.DEFINE_string(
 
 # Training settings:
 # TODO! If you want to train, change this to your 'tf_datasets' or specify it with the flag.
-DATA_DIR = '/scratch1/projects/tf_datasets/'
+DATA_DIR = '~/Documents/Github/hmr/tf_datasets/'
 
 flags.DEFINE_string('data_dir', DATA_DIR, 'Where to save training models')
 flags.DEFINE_string('log_dir', 'logs', 'Where to save training models')
