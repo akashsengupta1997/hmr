@@ -4,6 +4,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+# import os
+# os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
+# os.environ["CUDA_VISIBLE_DEVICES"]="0"
+
 import tensorflow as tf
 
 from .config import get_config, prepare_dirs, save_config
