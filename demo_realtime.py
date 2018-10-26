@@ -15,7 +15,7 @@ from src.util import openpose as op_util
 import src.config
 from src.RunModel import RunModel
 
-flags.DEFINE_string('img_path', 'data/im1963.jpg', 'Image to run')
+# TODO Delete this and remove all json path stuff
 flags.DEFINE_string(
     'json_path', None,
     'If specified, uses the openpose output to crop the image.')
@@ -44,38 +44,6 @@ def visualize(img, proc_param, joints, verts, cam, save_path, frame_num):
 
     if save_path is not None:
         cv2.imwrite(save_path + str(frame_num) + "hmr_result.png", combined_img)
-    # import matplotlib.pyplot as plt
-    # # plt.ion()
-    # plt.figure(1)
-    # plt.clf()
-    # plt.subplot(231)
-    # plt.imshow(img)
-    # plt.title('input')
-    # plt.axis('off')
-    # plt.subplot(232)
-    # plt.imshow(skel_img)
-    # plt.title('joint projection')
-    # plt.axis('off')
-    # plt.subplot(233)
-    # plt.imshow(rend_img_overlay)
-    # plt.title('3D Mesh overlay')
-    # plt.axis('off')
-    # plt.subplot(234)
-    # plt.imshow(rend_img)
-    # plt.title('3D mesh')
-    # plt.axis('off')
-    # plt.subplot(235)
-    # plt.imshow(rend_img_vp1)
-    # plt.title('diff vp')
-    # plt.axis('off')
-    # plt.subplot(236)
-    # plt.imshow(rend_img_vp2)
-    # plt.title('diff vp')
-    # plt.axis('off')
-    # plt.draw()
-    # plt.savefig(save_path + str(frame_num) + "hmr_result.png", format='png')
-    # import ipdb
-    # ipdb.set_trace()
 
 
 def preprocess_image(img, json_path=None):
@@ -109,7 +77,7 @@ def main(save_path, json_path=None):
     cap = cv2.VideoCapture(0)
 
     frame_num = 0
-    while (True):
+    while True:
         # Capture frame-by-frame
         ret, img = cap.read()
 
