@@ -21,7 +21,7 @@ flags.DEFINE_string(
     'If specified, uses the openpose output to crop the image.')
 
 
-def visualize(img, proc_param, joints, verts, cam, save_path, frame_num):
+def visualize_and_save(img, proc_param, joints, verts, cam, save_path, frame_num):
     """
     Renders the result in original image coordinate frame.
     """
@@ -89,7 +89,7 @@ def main(save_path, json_path=None):
         joints, verts, cams, joints3d, theta = model.predict(
             input_img, get_theta=True)
 
-        visualize(img, proc_param, joints[0], verts[0], cams[0], save_path, frame_num)
+        visualize_and_save(img, proc_param, joints[0], verts[0], cams[0], save_path, frame_num)
 
         frame_num += 1
         if cv2.waitKey(1) & 0xFF == ord('q'):
