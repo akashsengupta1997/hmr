@@ -147,7 +147,6 @@ def recreate_scene_from_bbs(orig_img, bbs, skel_bb_imgs, rend_bb_img_overlays, i
 def main(input_path, json_path=None):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
-
     if isdir(input_path):
         images = [f for f in listdir(input_path) if f.endswith('.jpg')]
         print('Predicting on all jpg images in folder.')
@@ -241,5 +240,4 @@ if __name__ == '__main__':
     config.batch_size = 1
 
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
-
     main(config.img_path, config.json_path)
