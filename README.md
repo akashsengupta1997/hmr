@@ -1,7 +1,7 @@
 My Own Modifications and Tweaks
 - multiperson predictions proof of concept (results in ...)
   - works by using MaskRCNN to get bounding boxes and then applying HMR to each bounding box.
-
+- real-time demo (form webcam) in demo_realtime.py - is very slow if don't have a dedicated GPU!
 
 
 # End-to-end Recovery of Human Shape and Pose
