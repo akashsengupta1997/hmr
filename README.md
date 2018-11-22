@@ -1,3 +1,9 @@
+My Own Modifications and Tweaks
+- multiperson predictions proof of concept (results in ...)
+  - works by using MaskRCNN to get bounding boxes and then applying HMR to each bounding box.
+
+
+
 # End-to-end Recovery of Human Shape and Pose
 
 Angjoo Kanazawa, Michael J. Black, David W. Jacobs, Jitendra Malik
@@ -77,3 +83,4 @@ If you use this code for your research, please consider citing:
 [MandyMo](https://github.com/MandyMo) has implemented a pytorch version of the repo: https://github.com/MandyMo/pytorch_HMR.git
 
 I have not tested them, but I appreciate the contribution! Thank you!!
+
