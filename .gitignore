@@ -11,3 +11,6 @@ forrelease.sh
 *.jpg
 *work_lock
 *.tfrecord
+*.pkl
+*.mat
+*.txt
