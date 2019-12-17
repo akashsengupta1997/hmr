@@ -275,7 +275,7 @@ class HMRTrainer(object):
 
         # Gather losses.
         with tf.name_scope("gather_e_loss"):
-            # Just the last loss.
+            # Just the last loss - I think this means just the last loss used by optimiser
             self.e_loss_kp = loss_kps[-1]
 
             if self.encoder_only:

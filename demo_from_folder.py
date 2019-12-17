@@ -124,8 +124,8 @@ def main(folder_path, json_path=None):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
 
-    images = [f for f in listdir(folder_path) if f.endswith('.jpg')]
-    print('Predicting on all jpg images in folder.')
+    images = [f for f in listdir(folder_path) if f.endswith('.png')]
+    print('Predicting on all png images in folder.')
     for image in images:
         print('Image:', image)
         img_path = join(folder_path, image)
@@ -135,6 +135,8 @@ def main(folder_path, json_path=None):
 
         joints, verts, cams, joints3d, theta = model.predict(
             input_img, get_theta=True)
+
+
 
         visualize(img, proc_param, joints[0], verts[0], cams[0], img_path)
 

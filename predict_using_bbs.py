@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import sys
 from os import listdir
-from os.path import join, splitext, isdir
+from os.path import join, splitext, isdir, basename
 from absl import flags
 
 import numpy as np
@@ -55,7 +55,7 @@ def preprocess_image(img, json_path=None):
 
 
 def render_bb_joints_verts(bb_img, proc_param, joints, verts, cam, image_path, person_num,
-                           visualise=False, save=False):
+                           visualise=False, save=False, outfile=None):
     """
     Renders the result in original image coordinate frame FOR EACH BOUNDING BOX.
     """
@@ -106,8 +106,12 @@ def render_bb_joints_verts(bb_img, proc_param, joints, verts, cam, image_path, p
         if visualise:
             plt.show()
         if save:
-            plt.savefig(splitext(image_path)[0] + "_hmr_result_person" + str(person_num) + ".png",
-                    format='png')
+            if outfile is None:
+                plt.savefig(splitext(image_path)[0] + "_hmr_result_person" + str(person_num) + ".png",
+                            format='png')
+            else:
+                plt.savefig(outfile + "_hmr_result_person" + str(person_num) + ".png",
+                            format='png')
 
     return skel_img, rend_img_overlay
 
@@ -144,9 +148,30 @@ def recreate_scene_from_bbs(orig_img, bbs, skel_bb_imgs, rend_bb_img_overlays, i
                 format='png')
 
 
+def write_ply_file(fpath, verts, colour):
+    ply_header = '''ply
+                    format ascii 1.0
+                    element vertex {}
+                    property float x
+                    property float y
+                    property float z
+                    property uchar red
+                    property uchar green
+                    property uchar blue
+                    end_header
+                   '''
+    num_verts = verts.shape[0]
+    color_array = np.tile(np.array(colour), (num_verts, 1))
+    verts_with_colour = np.concatenate([verts, color_array], axis=-1)
+    with open(fpath, 'w') as f:
+        f.write(ply_header.format(num_verts))
+        np.savetxt(f, verts_with_colour, '%f %f %f %d %d %d')
+
+
 def main(input_path, json_path=None):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
+    out_folder = "predictions/sports/videos/00001"
     if isdir(input_path):
         images = [f for f in listdir(input_path) if f.endswith('.jpg')]
         print('Predicting on all jpg images in folder.')
@@ -178,20 +203,42 @@ def main(input_path, json_path=None):
                 joints, verts, cams, joints3d, theta = model.predict(
                     input_crop_img, get_theta=True)
 
+                # Saving joints in pkl file
+                # joints_file_path = splitext(img_path)[0] + "_joints_coords.pkl"
+                # with open(joints_file_path, 'wb') as outfile:
+                #     pickle.dump(joints, outfile,
+                #                 protocol=2)  # protocol=2 for python2 (HMR uses this)
+                # print("Joints saved to ", joints_file_path)
+
+                # Saving verts in pkl file
+                # verts_file_path = splitext(img_path)[0] + "_verts_coords.pkl"
+                # with open(verts_file_path, 'wb') as outfile:
+                #     pickle.dump(verts, outfile,
+                #                 protocol=2)  # protocol=2 for python2 (HMR uses this)
+                # print("Verts saved to ", verts_file_path)
+
+                outfile = join(out_folder, splitext(image)[0])
+                print('Saving to:', outfile)
+                # Saving verts in ply file
+                write_ply_file(outfile + "_verts.ply", verts, [255, 0, 0])
+
+                # Save joints and render plots
                 skel_bb_image, rend_bb_image_overlay = render_bb_joints_verts(bb_img,
                                                                               proc_param,
                                                                               joints[0],
                                                                               verts[0],
                                                                               cams[0],
-                                                                              input_path,
-                                                                              person_num)
+                                                                              img_path,
+                                                                              person_num,
+                                                                              save=True,
+                                                                              outfile=outfile)
 
                 skel_bb_images.append(skel_bb_image)
                 rend_bb_image_overlays.append(rend_bb_image_overlay)
                 person_num += 1
 
-            recreate_scene_from_bbs(orig_image, bbs, skel_bb_images, rend_bb_image_overlays,
-                                    img_path)
+            # recreate_scene_from_bbs(orig_image, bbs, skel_bb_images, rend_bb_image_overlays,
+            #                         img_path)
 
     else:
         orig_image = cv2.imread(input_path)

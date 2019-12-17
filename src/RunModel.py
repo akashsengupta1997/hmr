@@ -92,6 +92,9 @@ class RunModel(object):
             print('Iteration %d' % i)
             # ---- Compute outputs
             state = tf.concat([self.img_feat, theta_prev], 1)
+            # print(self.img_feat.get_shape())
+            # print(theta_prev.get_shape())
+            # print(state.get_shape())
 
             if i == 0:
                 delta_theta, _ = threed_enc_fn(
@@ -164,7 +167,6 @@ class RunModel(object):
         }
 
         results = self.sess.run(fetch_dict, feed_dict)
-
         # Return joints in original image space.
         joints = results['joints']
         results['joints'] = ((joints + 1) * 0.5) * self.img_size

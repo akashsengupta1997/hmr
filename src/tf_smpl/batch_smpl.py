@@ -153,7 +153,6 @@ class SMPL(object):
             joint_y = tf.matmul(verts[:, :, 1], self.joint_regressor)
             joint_z = tf.matmul(verts[:, :, 2], self.joint_regressor)
             joints = tf.stack([joint_x, joint_y, joint_z], axis=2)
-
             if get_skin:
                 return verts, joints, Rs
             else:
