@@ -194,7 +194,7 @@ def main(input_path, json_path=None, crop_height_add=20):
             person_num = 1
             for bb in bbs:
                 y1, x1, y2, x2 = bb
-                y1 = min(0, y1 - 20)
+                y1 = max(0, y1 - 20)
                 y2 = min(orig_image.shape[0], y2 + 20)
                 bb_image = orig_image[y1:y2, x1:x2, :]
 
