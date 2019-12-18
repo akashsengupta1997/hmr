@@ -168,10 +168,10 @@ def write_ply_file(fpath, verts, colour):
         np.savetxt(f, verts_with_colour, '%f %f %f %d %d %d')
 
 
-def main(input_path, json_path=None):
+def main(input_path, json_path=None, crop_height_add=20):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
-    out_folder = "predictions/sports/videos/00001"
+    out_folder = "predictions/sports_videos/00001"
     if isdir(input_path):
         images = [f for f in listdir(input_path) if f.endswith('.jpg')]
         print('Predicting on all jpg images in folder.')
@@ -194,6 +194,8 @@ def main(input_path, json_path=None):
             person_num = 1
             for bb in bbs:
                 y1, x1, y2, x2 = bb
+                y1 = min(0, y1 - 20)
+                y2 = min(orig_image.shape[0], y2 + 20)
                 bb_image = orig_image[y1:y2, x1:x2, :]
 
                 input_crop_img, proc_param, bb_img = preprocess_image(bb_image, json_path)
@@ -220,7 +222,7 @@ def main(input_path, json_path=None):
                 outfile = join(out_folder, splitext(image)[0])
                 print('Saving to:', outfile)
                 # Saving verts in ply file
-                write_ply_file(outfile + "_verts.ply", verts, [255, 0, 0])
+                write_ply_file(outfile + "_verts.ply", verts[0], [255, 0, 0])
 
                 # Save joints and render plots
                 skel_bb_image, rend_bb_image_overlay = render_bb_joints_verts(bb_img,
@@ -253,6 +255,8 @@ def main(input_path, json_path=None):
         person_num = 1
         for bb in bbs:
             y1, x1, y2, x2 = bb
+            y1 = min(0, y1-20)
+            y2 = min(orig_image.shape[0], y2+20)
             bb_image = orig_image[y1:y2, x1:x2, :]
 
             input_crop_img, proc_param, bb_img = preprocess_image(bb_image, json_path)
