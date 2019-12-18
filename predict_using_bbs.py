@@ -173,8 +173,8 @@ def main(input_path, json_path=None, crop_height_add=20):
     model = RunModel(config, sess=sess)
     out_folder = "predictions/sports_videos/00001"
     if isdir(input_path):
-        images = [f for f in listdir(input_path) if f.endswith('.jpg')]
-        print('Predicting on all jpg images in folder.')
+        images = [f for f in sorted(listdir(input_path)) if f.endswith('.png')]
+        print('Predicting on all png images in folder.')
 
         for image in images:
             print('Image:', image)
