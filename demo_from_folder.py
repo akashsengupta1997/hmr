@@ -47,7 +47,7 @@ def visualize(img, proc_param, joints, verts, cam, image_path):
     """
     cam_for_render, vert_shifted, joints_orig = vis_util.get_original(
         proc_param, verts, cam, joints, img_size=img.shape[:2])
-
+    print(cam_for_render)
     # Render results
     skel_img = vis_util.draw_skeleton(img, joints_orig)
     rend_img_overlay = renderer(
@@ -92,6 +92,7 @@ def visualize(img, proc_param, joints, verts, cam, image_path):
     plt.savefig(image_path + "hmr_result.png", format='png')
     # import ipdb
     # ipdb.set_trace()
+    plt.imsave(image_path + "hmr_overlay.png", rend_img_overlay)
 
 
 def preprocess_image(img_path, json_path=None):
