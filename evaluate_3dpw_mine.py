@@ -44,9 +44,9 @@ def preprocess_image(img_path, json_path=None):
     return crop, proc_param, img
 
 
-def main(pw3d_eval_path, protocol=2):
+def main(pw3d_eval_path):
     """
-    This function isn't really doing evaluation on H3.6M - it just runs HMR on each H3.6M frame and stores the output.
+    This function isn't really doing evaluation on 3DPW - it just runs HMR on each 3DPW frame and stores the output.
     There is (or will be) a separate script in the pytorch_indirect_learning repo that will do the evaluation and metric
     computations.
     """
@@ -107,4 +107,4 @@ if __name__ == '__main__':
     config.batch_size = 1
 
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
-    main(config.img_path)
+    main(pw3d_eval_path=config.img_path)
