@@ -44,6 +44,15 @@ def preprocess_image(img_path, json_path=None):
     return crop, proc_param, img
 
 
+def convert_bbox_centre_hw_to_corners(centre, height, width):
+    x1 = centre[0] - height/2.0
+    x2 = centre[0] + height/2.0
+    y1 = centre[1] - width/2.0
+    y2 = centre[1] + width/2.0
+
+    return np.array([x1, y1, x2, y2])
+
+
 def main(dataset_path):
     """
     This function isn't really doing evaluation on H3.6M - it just runs HMR on each H3.6M frame and stores the output.
@@ -58,14 +67,30 @@ def main(dataset_path):
         os.makedirs(save_path)
     data = np.load(os.path.join(dataset_path, 'sports_videos_eval.npz'))
     frame_path_per_frame = data['frames_paths']
+    bbox_centres = data['centres']
+    bbox_whs = data['whs']
 
     pose_per_frame = []
     shape_per_frame = []
     verts_per_frame = []
     cam_per_frame = []
 
-    for image_path in tqdm(frame_path_per_frame):
-        input_img, proc_param, img = preprocess_image(image_path)
+    for i in tqdm(range(len(frame_path_per_frame))):
+        img = io.imread(frame_path_per_frame[i])
+        if img.shape[2] == 4:
+            img = img[:, :, :3]
+        bbox_centre = bbox_centres[i]
+        bbox_wh = bbox_whs[i] * 1.2
+        bbox_corners = convert_bbox_centre_hw_to_corners(bbox_centre, bbox_wh, bbox_wh)
+        top_left = bbox_corners[:2].astype(np.int16)
+        bottom_right = bbox_corners[2:].astype(np.int16)
+        top_left[top_left < 0] = 0
+        bottom_right[bottom_right < 0] = 0
+        img = img[top_left[0]: bottom_right[0], top_left[1]: bottom_right[1]]
+        img = cv2.resize(img, (config.img_size, config.img_size), interpolation=cv2.INTER_LINEAR)
+        input_img = 2 * ((img / 255.) - 0.5)
+        # input_img, proc_param, img = preprocess_image(image_path)
+
         # Add batch dimension: 1 x D x D x 3
         input_img = np.expand_dims(input_img, 0)
 

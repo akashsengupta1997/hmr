@@ -17,3 +17,4 @@ forrelease.sh
 
 # Predictions
 predictions/*
+evaluations/*
