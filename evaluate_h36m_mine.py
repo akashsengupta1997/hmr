@@ -112,6 +112,6 @@ if __name__ == '__main__':
         print('Using unpaired model!')
 
     config.batch_size = 1
-
+    print('Images from', config.img_path)
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
     main(config.img_path, paired=paired)
