@@ -53,7 +53,7 @@ def convert_bbox_centre_hw_to_corners(centre, height, width):
     return np.array([x1, y1, x2, y2])
 
 
-def main(dataset_path):
+def main(dataset_path, paired=True):
     """
     This function isn't really doing evaluation on H3.6M - it just runs HMR on each H3.6M frame and stores the output.
     There is (or will be) a separate script in the pytorch_indirect_learning repo that will do the evaluation and metric
@@ -63,6 +63,8 @@ def main(dataset_path):
     model = RunModel(config, sess=sess)
 
     save_path = '/data/cvfs/as2562/hmr/evaluations/sports_videos_final_dataset'
+    if not paired:
+        save_path += '_unpaired'
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     data = np.load(os.path.join(dataset_path, 'sports_videos_eval.npz'))
@@ -124,8 +126,13 @@ if __name__ == '__main__':
     config(sys.argv)
     # Using pre-trained model, change this to use your own.
     config.load_path = src.config.PRETRAINED_MODEL
+    if src.config.PRETRAINED_MODEL.endswith('model.ckpt-667589'):
+        paired = True
+    elif src.config.PRETRAINED_MODEL.endswith('model.ckpt-99046'):
+        paired = False
+        print('Using unpaired model!')
 
     config.batch_size = 1
-
+    print('Images from', config.img_path)
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
-    main(config.img_path)
+    main(config.img_path, paired=paired)
