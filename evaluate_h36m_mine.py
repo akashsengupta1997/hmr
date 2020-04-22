@@ -55,6 +55,8 @@ def main(h36m_eval_path, protocol=2, paired=True):
 
     cropped_frames_dir = os.path.join(h36m_eval_path, 'cropped_frames')
     save_path = '/data/cvfs/as2562/hmr/evaluations/h36m_protocol{}'.format(str(protocol))
+    if paired:
+        save_path += '_paired'
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     eval_data = np.load(os.path.join(h36m_eval_path, 'h36m_with_smpl_valid_protocol{}.npz').format(str(protocol)))
