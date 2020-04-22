@@ -44,7 +44,7 @@ def preprocess_image(img_path, json_path=None):
     return crop, proc_param, img
 
 
-def main(h36m_eval_path, protocol=2):
+def main(h36m_eval_path, protocol=2, paired=True):
     """
     This function isn't really doing evaluation on H3.6M - it just runs HMR on each H3.6M frame and stores the output.
     There is (or will be) a separate script in the pytorch_indirect_learning repo that will do the evaluation and metric
@@ -103,8 +103,13 @@ if __name__ == '__main__':
     config(sys.argv)
     # Using pre-trained model, change this to use your own.
     config.load_path = src.config.PRETRAINED_MODEL
+    if src.config.PRETRAINED_MODEL.endswith('model.ckpt-667589'):
+        paired = True
+    elif src.config.PRETRAINED_MODEL.endswith('model.ckpt-99046'):
+        paired = False
+        print('Using unpaired model!')
 
     config.batch_size = 1
 
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
-    main(config.img_path)
+    main(config.img_path, paired=paired)
