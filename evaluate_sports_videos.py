@@ -53,7 +53,7 @@ def convert_bbox_centre_hw_to_corners(centre, height, width):
     return np.array([x1, y1, x2, y2])
 
 
-def main(dataset_path, paired=True):
+def main(dataset_path, paired=True, path_correction=False):
     """
     This function isn't really doing evaluation on H3.6M - it just runs HMR on each H3.6M frame and stores the output.
     There is (or will be) a separate script in the pytorch_indirect_learning repo that will do the evaluation and metric
@@ -78,7 +78,10 @@ def main(dataset_path, paired=True):
     cam_per_frame = []
 
     for i in tqdm(range(len(frame_path_per_frame))):
-        img = io.imread(frame_path_per_frame[i])
+        fpath = frame_path_per_frame[i]
+        if path_correction:
+            fpath = fpath.replace('/scratch2/', '/scratch/')
+        img = io.imread(fpath)
         if img.shape[2] == 4:
             img = img[:, :, :3]
         bbox_centre = bbox_centres[i]
@@ -135,4 +138,5 @@ if __name__ == '__main__':
     config.batch_size = 1
     print('Images from', config.img_path)
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
-    main(config.img_path, paired=paired)
+    path_correction = False
+    main(config.img_path, paired=paired, path_correction=path_correction)
