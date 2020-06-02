@@ -69,7 +69,7 @@ def main(dataset_path, paired=True, path_correction=False):
     data = np.load(os.path.join(dataset_path, 'labels.npz'))
     fname_per_frame = data['fnames']
     bbox_centres = data['bbox_centres']
-    bbox_whs = data['whs']
+    bbox_whs = data['bbox_whs']
 
     pose_per_frame = []
     shape_per_frame = []
