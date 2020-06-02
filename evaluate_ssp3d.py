@@ -140,4 +140,4 @@ if __name__ == '__main__':
     print('Images from', config.img_path)
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
     path_correction = False
-    main(config.img_path, paired=paired, path_correction=path_correction)
+    main(dataset_path=config.img_path, paired=paired, path_correction=path_correction)
