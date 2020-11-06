@@ -44,7 +44,7 @@ def preprocess_image(img_path, json_path=None):
     return crop, proc_param, img
 
 
-def main(pw3d_eval_path):
+def main(pw3d_eval_path, paired=True):
     """
     This function isn't really doing evaluation on 3DPW - it just runs HMR on each 3DPW frame and stores the output.
     There is (or will be) a separate script in the pytorch_indirect_learning repo that will do the evaluation and metric
@@ -55,6 +55,8 @@ def main(pw3d_eval_path):
 
     cropped_frames_dir = os.path.join(pw3d_eval_path, 'cropped_frames')
     save_path = '/data/cvfs/as2562/hmr/evaluations/3dpw'
+    if not paired:
+        save_path += '_unpaired'
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     eval_data = np.load(os.path.join(pw3d_eval_path, '3dpw_test.npz'))
@@ -103,8 +105,13 @@ if __name__ == '__main__':
     config(sys.argv)
     # Using pre-trained model, change this to use your own.
     config.load_path = src.config.PRETRAINED_MODEL
+    if src.config.PRETRAINED_MODEL.endswith('model.ckpt-667589'):
+        paired = True
+    elif src.config.PRETRAINED_MODEL.endswith('model.ckpt-99046'):
+        paired = False
+        print('Using unpaired model!')
 
     config.batch_size = 1
 
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
-    main(pw3d_eval_path=config.img_path)
+    main(pw3d_eval_path=config.img_path, paired=paired)
