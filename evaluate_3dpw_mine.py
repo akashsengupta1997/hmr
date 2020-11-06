@@ -20,6 +20,9 @@ from src.RunModel import RunModel
 
 flags.DEFINE_string('img_path', 'data/im1963.jpg', 'Image to run')
 
+gpu = "0"
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"   # see issue #152
+os.environ["CUDA_VISIBLE_DEVICES"] = gpu
 
 def preprocess_image(img_path, json_path=None):
     img = io.imread(img_path)
